@@ -79,14 +79,14 @@ export function TeamScreen() {
             <View style={styles.row}>
               <Avatar name={member.name} size={48} />
               <View style={{ flex: 1 }}>
-                <Text style={styles.name}>{member.name}</Text>
+                <Text numberOfLines={1} style={styles.name}>{member.name}</Text>
                 <Text style={styles.sub}>
                   {member.employeeCode} · {member.designation}
                 </Text>
               </View>
               <Badge
                 icon={member.checkedOut ? "log-out-outline" : member.checkedIn ? "radio-button-on" : "remove-circle-outline"}
-                label={member.checkedOut ? "Out" : member.checkedIn ? "In" : "Absent"}
+                label={member.checkedOut ? "Checked out" : member.checkedIn ? "On duty" : "Not in"}
                 tone={member.checkedOut ? "muted" : member.checkedIn ? "gold" : "danger"}
               />
             </View>
@@ -131,8 +131,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     borderWidth: 1,
     borderColor: colors.line,
-    borderTopWidth: 3,
-    borderTopColor: colors.gold,
   },
   statNum: { fontSize: 22, fontWeight: "800", color: colors.forest },
   statLabel: { color: colors.muted, fontWeight: "700", fontSize: 11, marginTop: 2, textTransform: "uppercase", letterSpacing: 0.5 },

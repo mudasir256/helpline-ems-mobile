@@ -5,7 +5,7 @@ import { api } from "../api";
 import { Badge, Card, EmptyState, IconWell, Screen, SectionLabel, Title } from "../components/ui";
 import { Rise } from "../motion";
 import { durationBetween, formatDate, formatTime } from "../datetime";
-import { iconForProject } from "../icons";
+import { iconForProject, prettyType } from "../icons";
 import type { Attendance, DailyReport } from "../types";
 import { colors } from "../theme";
 
@@ -51,11 +51,11 @@ export function HistoryScreen() {
                 <IconWell name={row.checkOutAt ? "checkmark-circle-outline" : "radio-button-on"} tone={row.checkOutAt ? "muted" : "gold"} />
                 <View style={{ flex: 1 }}>
                   <Text style={styles.strong}>{formatDate(row.date)}</Text>
+                  <Text style={styles.meta}>In {formatTime(row.checkInAt)}</Text>
                   <Text style={styles.meta}>
-                    In {formatTime(row.checkInAt)}
                     {row.checkOutAt
-                      ? `  ·  Out ${formatTime(row.checkOutAt)}  ·  ${durationBetween(row.checkInAt, row.checkOutAt)}`
-                      : "  ·  Still on duty"}
+                      ? `Out ${formatTime(row.checkOutAt)} · ${durationBetween(row.checkInAt, row.checkOutAt)}`
+                      : "Still on duty"}
                   </Text>
                 </View>
                 <Badge label={row.checkOutAt ? "Out" : "On duty"} tone={row.checkOutAt ? "muted" : "gold"} />
@@ -74,7 +74,10 @@ export function HistoryScreen() {
                 <IconWell name={iconForProject(report.project.type)} />
                 <View style={{ flex: 1 }}>
                   <Text style={styles.strong}>{formatDate(report.date)}</Text>
-                  <Text style={styles.meta}>{report.project.name}</Text>
+                  <Text style={styles.meta}>
+                    {report.project.name}
+                    {report.project.type ? ` · ${prettyType(report.project.type)}` : ""}
+                  </Text>
                 </View>
               </View>
               <Text style={styles.body}>{report.summary}</Text>

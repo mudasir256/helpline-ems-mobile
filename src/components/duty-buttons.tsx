@@ -5,7 +5,7 @@ import { api } from "../api";
 import { useAuth } from "../auth";
 import { colors, radii, shadow } from "../theme";
 import { FormScroll, useKeyboardHeight } from "../keyboard";
-import { Button, Field } from "./ui";
+import { Button, charactersLeft, Field } from "./ui";
 
 export function DutyButtons() {
   const { token, today, projects, checkin, checkout } = useAuth();
@@ -126,6 +126,7 @@ export function DutyButtons() {
               ) : null}
               {error ? <Text style={styles.error}>{error}</Text> : null}
               <Field
+                hint={charactersLeft(summary, 5)}
                 icon="reader-outline"
                 label="Short summary"
                 onChangeText={setSummary}
@@ -133,13 +134,20 @@ export function DutyButtons() {
                 value={summary}
               />
               <Field
+                hint={charactersLeft(details, 10)}
                 label="Full details"
                 multiline
                 onChangeText={setDetails}
                 placeholder="Classes taken, visits, tasks completed…"
                 value={details}
               />
-              <Text style={styles.hint}>Summary needs 5 characters. Details need 10.</Text>
+              <Text style={styles.hint}>
+                {reportSaved
+                  ? "Report saved. Finishing checkout."
+                  : canSubmit
+                    ? "Saving this report checks you out."
+                    : "Finish both fields to check out. Cancel leaves you on duty."}
+              </Text>
               <Button
                 disabled={!canSubmit}
                 icon="exit-outline"

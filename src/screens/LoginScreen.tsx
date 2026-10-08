@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Animated, Easing, StyleSheet, Text, TextInput, View } from "react-native";
+import { Animated, Easing, Image, StyleSheet, Text, TextInput, View } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useAuth } from "../auth";
@@ -8,6 +8,8 @@ import { Button, Field, HeroWash } from "../components/ui";
 import { FormScroll, useKeyboardHeight } from "../keyboard";
 import { Pop, Rise } from "../motion";
 import { Ionicons } from "@expo/vector-icons";
+
+const logoMark = require("../../assets/logo-mark.png");
 
 export function LoginScreen() {
   const { login } = useAuth();
@@ -66,7 +68,7 @@ export function LoginScreen() {
           <View style={styles.brandRow}>
             <Pop>
               <View style={[styles.mark, compact && styles.markCompact]}>
-                <Text style={[styles.markText, compact && styles.markTextCompact]}>H</Text>
+                <Image source={logoMark} style={[styles.markImage, compact && styles.markImageCompact]} />
               </View>
             </Pop>
             <Rise delay={80}>
@@ -104,6 +106,7 @@ export function LoginScreen() {
             icon="mail-outline"
             keyboardType="email-address"
             label="Work email"
+            placeholder="name@helpline.org"
             onChangeText={setEmail}
             onSubmitEditing={() => passwordRef.current?.focus()}
             returnKeyType="next"
@@ -115,6 +118,7 @@ export function LoginScreen() {
             autoComplete="password"
             icon="lock-closed-outline"
             label="Password"
+            placeholder="Your password"
             onChangeText={setPassword}
             onSubmitEditing={onSubmit}
             returnKeyType="done"
@@ -151,8 +155,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   markCompact: { width: 40, height: 40, borderRadius: 14 },
-  markText: { color: colors.gold, fontSize: 26, fontWeight: "900" },
-  markTextCompact: { fontSize: 18 },
+  markImage: { width: 34, height: 34 },
+  markImageCompact: { width: 24, height: 24 },
   brand: { color: colors.gold, fontSize: 11, fontWeight: "800", letterSpacing: 1.6 },
   heroTitle: { color: colors.white, fontSize: 34, fontWeight: "800", marginTop: 2, letterSpacing: -0.8 },
   heroTitleCompact: { fontSize: 22, marginTop: 0 },

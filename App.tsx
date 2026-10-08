@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { ActivityIndicator, Animated, Pressable, StyleSheet, Text, View } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import { LinearGradient } from "expo-linear-gradient";
 import { SafeAreaProvider, SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { AuthProvider, useAuth } from "./src/auth";
@@ -14,6 +13,8 @@ import { TeamScreen } from "./src/screens/TeamScreen";
 import { tabIcons } from "./src/icons";
 import { colors, shadow } from "./src/theme";
 import { useKeyboardHeight } from "./src/keyboard";
+
+const splashMark = require("./assets/splash-icon.png");
 
 type Tab = "today" | "report" | "history" | "team" | "profile";
 
@@ -75,7 +76,8 @@ function Root() {
 }
 
 function BootScreen() {
-  const scale = useRef(new Animated.Value(0.92)).current;
+  // Starts exactly where the native splash leaves off (same mark, size and background), then comes alive.
+  const scale = useRef(new Animated.Value(1)).current;
   const opacity = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -83,21 +85,23 @@ function BootScreen() {
       Animated.timing(opacity, { toValue: 1, duration: 420, useNativeDriver: true }),
       Animated.loop(
         Animated.sequence([
+          Animated.timing(scale, { toValue: 0.95, duration: 900, useNativeDriver: true }),
           Animated.timing(scale, { toValue: 1, duration: 900, useNativeDriver: true }),
-          Animated.timing(scale, { toValue: 0.94, duration: 900, useNativeDriver: true }),
         ])
       ),
     ]).start();
   }, [opacity, scale]);
 
   return (
-    <LinearGradient colors={[colors.forestDeep, colors.forest]} style={styles.boot}>
-      <Animated.View style={[styles.bootMark, { opacity, transform: [{ scale }] }]}>
-        <Text style={styles.bootH}>H</Text>
+    <View style={styles.boot}>
+      <StatusBar style="light" />
+      <Animated.Image source={splashMark} style={[styles.bootMark, { transform: [{ scale }] }]} />
+      <Animated.View style={[styles.bootFooter, { opacity }]}>
+        <Text style={styles.bootTitle}>Helpline Staff</Text>
+        <Text style={styles.bootLabel}>Helpline Welfare Trust</Text>
+        <ActivityIndicator color={colors.gold} style={styles.bootSpinner} />
       </Animated.View>
-      <ActivityIndicator color={colors.gold} />
-      <Text style={styles.bootLabel}>Helpline</Text>
-    </LinearGradient>
+    </View>
   );
 }
 
@@ -122,7 +126,9 @@ function TabButton({
     <Pressable onPress={onPress} style={styles.tabPress}>
       <Animated.View style={[styles.tab, active && styles.tabOn, { transform: [{ scale }] }]}>
         <Ionicons color={active ? colors.leafDark : colors.muted} name={icon} size={20} />
-        <Text style={[styles.tabText, active && styles.tabActive]}>{label}</Text>
+        <Text adjustsFontSizeToFit minimumFontScale={0.75} numberOfLines={1} style={[styles.tabText, active && styles.tabActive]}>
+          {label}
+        </Text>
       </Animated.View>
     </Pressable>
   );
@@ -141,19 +147,12 @@ export default function App() {
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.forestDeep },
   body: { flex: 1, backgroundColor: colors.canvas },
-  boot: { flex: 1, alignItems: "center", justifyContent: "center", gap: 16 },
-  bootMark: {
-    width: 72,
-    height: 72,
-    borderRadius: 24,
-    backgroundColor: "rgba(255,255,255,0.1)",
-    borderWidth: 1,
-    borderColor: "rgba(201,163,92,0.5)",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  bootH: { color: colors.gold, fontSize: 30, fontWeight: "900" },
-  bootLabel: { color: "rgba(255,255,255,0.72)", fontWeight: "700", letterSpacing: 1.4, textTransform: "uppercase", fontSize: 12 },
+  boot: { flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: colors.forest },
+  bootMark: { width: 180, height: 180 },
+  bootFooter: { position: "absolute", left: 0, right: 0, bottom: 84, alignItems: "center" },
+  bootTitle: { color: colors.white, fontSize: 22, fontWeight: "800", letterSpacing: 0.2 },
+  bootLabel: { color: colors.gold, fontWeight: "800", letterSpacing: 1.6, textTransform: "uppercase", fontSize: 11, marginTop: 6 },
+  bootSpinner: { marginTop: 22 },
   tabDock: { backgroundColor: colors.canvas, paddingHorizontal: 14, paddingTop: 4 },
   tabs: {
     flexDirection: "row",

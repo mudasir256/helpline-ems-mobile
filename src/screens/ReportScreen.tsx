@@ -3,10 +3,10 @@ import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
 import { useAuth } from "../auth";
 import { api } from "../api";
 import { DutyButtons } from "../components/duty-buttons";
-import { Badge, Button, Card, EmptyState, Field, Icon, IconWell, Screen, SectionLabel, Title } from "../components/ui";
+import { Badge, Button, Card, charactersLeft, EmptyState, Field, Icon, IconWell, Screen, SectionLabel, Title } from "../components/ui";
 import { Rise } from "../motion";
 import { formatTime } from "../datetime";
-import { iconForProject } from "../icons";
+import { iconForProject, prettyType } from "../icons";
 import { colors } from "../theme";
 import { FormScroll } from "../keyboard";
 
@@ -17,6 +17,9 @@ export function ReportScreen() {
   const [details, setDetails] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const summaryHint = charactersLeft(summary, 5);
+  const detailsHint = charactersLeft(details, 10);
+  const canSubmit = Boolean(projectId) && !summaryHint && !detailsHint;
 
   useEffect(() => {
     if (!projectId && projects[0]?.id) setProjectId(projects[0].id);
@@ -44,9 +47,7 @@ export function ReportScreen() {
       <FormScroll contentContainerStyle={styles.content}>
         <Rise>
         <Title>Daily report</Title>
-        <Text style={styles.lead}>
-          Check in when you start. You can send more than one report today, then check out when you leave.
-        </Text>
+        <Text style={styles.lead}>Check in, write what you did, then check out when you leave. You can send more than one report today.</Text>
 
         <View style={{ marginTop: 8, marginBottom: 8 }}>
           <DutyButtons />
@@ -79,7 +80,7 @@ export function ReportScreen() {
           />
         ) : (
           <View style={{ marginTop: 8 }}>
-            <SectionLabel>Add another report</SectionLabel>
+            <SectionLabel>{today?.reports?.length ? "Add another report" : "Write today's report"}</SectionLabel>
             {projects.map((project) => {
               const active = projectId === project.id;
               return (
@@ -88,7 +89,7 @@ export function ReportScreen() {
                     <IconWell name={iconForProject(project.type)} tone={active ? "leaf" : "muted"} />
                     <View style={{ flex: 1 }}>
                       <Text style={styles.choiceTitle}>{project.name}</Text>
-                      <Text style={styles.choiceMeta}>{project.type.replaceAll("_", " ")}</Text>
+                      <Text style={styles.choiceMeta}>{prettyType(project.type)}</Text>
                     </View>
                     <Icon
                       color={active ? colors.leaf : colors.line}
@@ -104,8 +105,16 @@ export function ReportScreen() {
                 <Text style={styles.errorText}>{error}</Text>
               </View>
             ) : null}
-            <Field icon="reader-outline" label="Short summary" onChangeText={setSummary} value={summary} />
             <Field
+              hint={summaryHint}
+              icon="reader-outline"
+              label="Short summary"
+              onChangeText={setSummary}
+              placeholder="One line about today"
+              value={summary}
+            />
+            <Field
+              hint={detailsHint}
               label="Full details"
               multiline
               onChangeText={setDetails}
@@ -113,7 +122,7 @@ export function ReportScreen() {
               value={details}
             />
             <Button
-              disabled={!projectId || summary.trim().length < 5 || details.trim().length < 10}
+              disabled={!canSubmit}
               icon="send-outline"
               label="Submit report"
               loading={loading}
@@ -131,7 +140,7 @@ const styles = StyleSheet.create({
   content: { paddingBottom: 40 },
   lead: { color: colors.muted, marginTop: 6, marginBottom: 10, lineHeight: 21, fontSize: 15 },
   choice: { flexDirection: "row", alignItems: "center", gap: 12, marginBottom: 10 },
-  choiceOn: { borderColor: colors.leaf, backgroundColor: colors.leafSoft, borderLeftWidth: 3, borderLeftColor: colors.gold },
+  choiceOn: { borderColor: colors.leaf, backgroundColor: colors.leafSoft },
   choiceTitle: { fontWeight: "800", color: colors.ink, fontSize: 16 },
   choiceMeta: { color: colors.muted, marginTop: 2, fontWeight: "600", fontSize: 12 },
   error: {

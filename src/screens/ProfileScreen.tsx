@@ -1,6 +1,5 @@
 import { Alert, Linking, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useAuth } from "../auth";
-import { API_BASE } from "../api";
 import { Avatar, Button, Card, HeroWash, Icon, IconWell, Screen } from "../components/ui";
 import { Rise } from "../motion";
 import { colors } from "../theme";
@@ -60,7 +59,6 @@ export function ProfileScreen() {
             }
             tone="danger"
           />
-          <Text style={styles.api}>Connected to {API_BASE.replace(/^https?:\/\//, "")}</Text>
         </Rise>
       </ScrollView>
     </Screen>
@@ -111,5 +109,4 @@ const styles = StyleSheet.create({
   value: { color: colors.ink, fontSize: 16, fontWeight: "700", marginTop: 3 },
   note: { flexDirection: "row", gap: 12, alignItems: "center" },
   noteText: { flex: 1, color: colors.muted, lineHeight: 20 },
-  api: { color: colors.muted, textAlign: "center", marginTop: 16, fontSize: 11 },
 });

@@ -16,6 +16,16 @@ export function iconForProject(type?: string): IconName {
   return projectTypeIcon[type || ""] || "briefcase-outline";
 }
 
+export function prettyType(value?: string | null) {
+  if (!value) return "";
+  return value
+    .toLowerCase()
+    .split("_")
+    .filter(Boolean)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+}
+
 export const tabIcons: Record<string, { on: IconName; off: IconName }> = {
   today: { on: "home", off: "home-outline" },
   report: { on: "document-text", off: "document-text-outline" },

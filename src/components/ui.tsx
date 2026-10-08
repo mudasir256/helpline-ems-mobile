@@ -122,8 +122,15 @@ export function Avatar({ name, size = 56 }: { name?: string | null; size?: numbe
   );
 }
 
-export const Field = forwardRef<TextInput, TextInputProps & { label: string; icon?: IconName }>(function Field(
-  { label, icon, secureTextEntry, ...props },
+export function charactersLeft(value: string, min: number) {
+  const left = min - value.trim().length;
+  if (left <= 0) return undefined;
+  if (!value.trim()) return `At least ${min} characters`;
+  return `${left} more ${left === 1 ? "character" : "characters"}`;
+}
+
+export const Field = forwardRef<TextInput, TextInputProps & { label: string; icon?: IconName; hint?: string }>(function Field(
+  { label, icon, hint, secureTextEntry, ...props },
   ref
 ) {
   const [hidden, setHidden] = useState(Boolean(secureTextEntry));
@@ -173,6 +180,7 @@ export const Field = forwardRef<TextInput, TextInputProps & { label: string; ico
           </Pressable>
         ) : null}
       </View>
+      {hint ? <Text style={styles.fieldHint}>{hint}</Text> : null}
     </View>
   );
 });
@@ -331,6 +339,7 @@ const styles = StyleSheet.create({
   },
   avatarText: { color: colors.gold, fontWeight: "800" },
   field: { marginBottom: 14 },
+  fieldHint: { color: colors.muted, fontSize: 12, fontWeight: "600", marginTop: 6 },
   label: {
     fontSize: 11,
     fontWeight: "800",

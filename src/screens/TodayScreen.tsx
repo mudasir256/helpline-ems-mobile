@@ -4,7 +4,7 @@ import { useAuth } from "../auth";
 import { DutyButtons } from "../components/duty-buttons";
 import { Badge, Card, EmptyState, HeroWash, IconWell, Screen, SectionLabel } from "../components/ui";
 import { formatTime, formatWeekday, greetingNow } from "../datetime";
-import { iconForProject } from "../icons";
+import { iconForProject, prettyType } from "../icons";
 import { Pulse, Rise } from "../motion";
 import { colors } from "../theme";
 
@@ -91,10 +91,10 @@ export function TodayScreen() {
               <IconWell name={onDuty ? "leaf-outline" : today?.checkedOut ? "checkmark-done-outline" : "time-outline"} size={36} />
               <Text style={styles.noteText}>
                 {!today?.checkedIn
-                  ? "Tap Check in when you start work. Check out asks for today's report."
+                  ? "Check in when you arrive. Check out asks for today's report before duty ends."
                   : today.checkedOut
-                    ? "Duty is closed for today. Check in again when you return."
-                    : "You are on duty. Check out opens your daily report, then ends duty."}
+                    ? "Checked out. Check in again if you come back today."
+                    : "You are on duty. Check out writes today's report, then ends duty."}
               </Text>
             </View>
           </Card>
@@ -113,7 +113,7 @@ export function TodayScreen() {
                 <Card style={styles.project}>
                   <IconWell name={iconForProject(project.type)} />
                   <View style={{ flex: 1 }}>
-                    <Badge label={project.type.replaceAll("_", " ")} />
+                    <Badge label={prettyType(project.type)} />
                     <Text style={styles.projectName}>{project.name}</Text>
                     <Text style={styles.projectMeta}>{project.location || project.code}</Text>
                   </View>
