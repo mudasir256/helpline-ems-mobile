@@ -13,34 +13,50 @@
           "NSAllowsLocalNetworking": true
         }
       },
-      "bundleIdentifier": "com.anonymous.helplinestaff"
+      "bundleIdentifier": "com.helpline.staff",
+      "buildNumber": "1",
+      "config": {
+        "usesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#163d28",
+        "backgroundColor": "#ffffff",
         "foregroundImage": "./assets/android-icon-foreground.png",
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false,
-      "usesCleartextTraffic": true,
       "softwareKeyboardLayoutMode": "resize",
-      "package": "com.anonymous.helplinestaff"
+      "package": "com.helpline.staff",
+      "versionCode": 1,
+      "blockedPermissions": [
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.SYSTEM_ALERT_WINDOW"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      "expo-secure-store",
+      [
+        "expo-secure-store",
+        {
+          "faceIDPermission": false
+        }
+      ],
       [
         "expo-splash-screen",
         {
           "image": "./assets/splash-icon.png",
-          "imageWidth": 180,
+          "imageWidth": 200,
           "resizeMode": "contain",
-          "backgroundColor": "#143526"
+          "backgroundColor": "#ffffff"
         }
-      ]
-    ]
+      ],
+      "expo-font"
+    ],
+    "description": "Attendance and daily reports for Helpline Welfare Trust staff."
   }
 }

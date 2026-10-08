@@ -8,6 +8,8 @@ import { Button, Field, HeroWash } from "../components/ui";
 import { FormScroll, useKeyboardHeight } from "../keyboard";
 import { Pop, Rise } from "../motion";
 import { Ionicons } from "@expo/vector-icons";
+import { LegalScreen } from "./LegalScreen";
+import type { LegalDoc } from "../legal";
 
 const logoMark = require("../../assets/logo-mark.png");
 
@@ -20,6 +22,7 @@ export function LoginScreen() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [legal, setLegal] = useState<LegalDoc | null>(null);
   const passwordRef = useRef<TextInput>(null);
   const sheet = useRef(new Animated.Value(28)).current;
   const sheetOpacity = useRef(new Animated.Value(0)).current;
@@ -127,8 +130,20 @@ export function LoginScreen() {
             value={password}
           />
           <Button icon="log-in-outline" label="Continue" loading={loading} onPress={onSubmit} />
+          <Text style={styles.legal}>
+            By continuing you agree to the{" "}
+            <Text onPress={() => setLegal("terms")} style={styles.legalLink}>
+              Terms & Conditions
+            </Text>{" "}
+            and{" "}
+            <Text onPress={() => setLegal("privacy")} style={styles.legalLink}>
+              Privacy Policy
+            </Text>
+            .
+          </Text>
         </Animated.View>
       </FormScroll>
+      <LegalScreen doc={legal} onClose={() => setLegal(null)} />
     </View>
   );
 }
@@ -148,15 +163,13 @@ const styles = StyleSheet.create({
     width: 58,
     height: 58,
     borderRadius: 18,
-    backgroundColor: "rgba(255,255,255,0.12)",
-    borderWidth: 1,
-    borderColor: "rgba(201,163,92,0.55)",
+    backgroundColor: colors.white,
     alignItems: "center",
     justifyContent: "center",
   },
   markCompact: { width: 40, height: 40, borderRadius: 14 },
-  markImage: { width: 34, height: 34 },
-  markImageCompact: { width: 24, height: 24 },
+  markImage: { width: 46, height: 46 },
+  markImageCompact: { width: 32, height: 32 },
   brand: { color: colors.gold, fontSize: 11, fontWeight: "800", letterSpacing: 1.6 },
   heroTitle: { color: colors.white, fontSize: 34, fontWeight: "800", marginTop: 2, letterSpacing: -0.8 },
   heroTitleCompact: { fontSize: 22, marginTop: 0 },
@@ -193,4 +206,6 @@ const styles = StyleSheet.create({
     marginBottom: 14,
   },
   errorText: { color: colors.danger, fontWeight: "600", flex: 1 },
+  legal: { color: colors.muted, fontSize: 12, lineHeight: 18, textAlign: "center", marginTop: 14 },
+  legalLink: { color: colors.leafDark, fontWeight: "800" },
 });

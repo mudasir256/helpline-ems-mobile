@@ -94,12 +94,12 @@ function BootScreen() {
 
   return (
     <View style={styles.boot}>
-      <StatusBar style="light" />
+      <StatusBar style="dark" />
       <Animated.Image source={splashMark} style={[styles.bootMark, { transform: [{ scale }] }]} />
       <Animated.View style={[styles.bootFooter, { opacity }]}>
         <Text style={styles.bootTitle}>Helpline Staff</Text>
         <Text style={styles.bootLabel}>Helpline Welfare Trust</Text>
-        <ActivityIndicator color={colors.gold} style={styles.bootSpinner} />
+        <ActivityIndicator color={colors.leaf} style={styles.bootSpinner} />
       </Animated.View>
     </View>
   );
@@ -147,11 +147,11 @@ export default function App() {
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.forestDeep },
   body: { flex: 1, backgroundColor: colors.canvas },
-  boot: { flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: colors.forest },
-  bootMark: { width: 180, height: 180 },
+  boot: { flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: colors.white },
+  bootMark: { width: 200, height: 200 },
   bootFooter: { position: "absolute", left: 0, right: 0, bottom: 84, alignItems: "center" },
-  bootTitle: { color: colors.white, fontSize: 22, fontWeight: "800", letterSpacing: 0.2 },
-  bootLabel: { color: colors.gold, fontWeight: "800", letterSpacing: 1.6, textTransform: "uppercase", fontSize: 11, marginTop: 6 },
+  bootTitle: { color: colors.forest, fontSize: 22, fontWeight: "800", letterSpacing: 0.2 },
+  bootLabel: { color: colors.leafDark, fontWeight: "800", letterSpacing: 1.6, textTransform: "uppercase", fontSize: 11, marginTop: 6 },
   bootSpinner: { marginTop: 22 },
   tabDock: { backgroundColor: colors.canvas, paddingHorizontal: 14, paddingTop: 4 },
   tabs: {

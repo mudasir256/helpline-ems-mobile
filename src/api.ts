@@ -13,8 +13,16 @@ function guessHost() {
   return "127.0.0.1";
 }
 
-export const API_BASE =
-  process.env.EXPO_PUBLIC_API_URL?.replace(/\/$/, "") || `http://${guessHost()}:3002`;
+const PRODUCTION_API = "https://ams.helplinewelfaretrust.org";
+
+function resolveApiBase() {
+  const configured = process.env.EXPO_PUBLIC_API_URL?.replace(/\/$/, "");
+  if (__DEV__) return configured || `http://${guessHost()}:3002`;
+  // Store builds must never point at a developer machine or plain http.
+  return configured?.startsWith("https://") ? configured : PRODUCTION_API;
+}
+
+export const API_BASE = resolveApiBase();
 
 type LoginResponse = {
   token: string;
@@ -37,7 +45,11 @@ async function request<T>(
       },
     });
   } catch {
-    throw new Error("Could not reach the staff server. Start the admin app on this computer, then try again.");
+    throw new Error(
+      __DEV__
+        ? "Could not reach the staff server. Start the admin app on this computer, then try again."
+        : "Could not reach the server. Check your internet connection and try again."
+    );
   }
   const data = await res.json().catch(() => ({}));
   if (!res.ok) {

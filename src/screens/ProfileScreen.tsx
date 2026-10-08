@@ -1,11 +1,15 @@
+import { useState } from "react";
 import { Alert, Linking, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useAuth } from "../auth";
 import { Avatar, Button, Card, HeroWash, Icon, IconWell, Screen } from "../components/ui";
 import { Rise } from "../motion";
 import { colors } from "../theme";
+import { LegalScreen } from "./LegalScreen";
+import type { LegalDoc } from "../legal";
 
 export function ProfileScreen() {
   const { employee, logout } = useAuth();
+  const [legal, setLegal] = useState<LegalDoc | null>(null);
 
   return (
     <Screen padded={false}>
@@ -47,6 +51,11 @@ export function ProfileScreen() {
             </View>
           </Card>
 
+          <Card style={{ marginTop: 12 }}>
+            <LinkRow icon="shield-checkmark-outline" label="Privacy Policy" onPress={() => setLegal("privacy")} />
+            <LinkRow icon="document-text-outline" label="Terms & Conditions" last onPress={() => setLegal("terms")} />
+          </Card>
+
           <View style={{ height: 18 }} />
           <Button
             icon="log-out-outline"
@@ -61,6 +70,7 @@ export function ProfileScreen() {
           />
         </Rise>
       </ScrollView>
+      <LegalScreen doc={legal} onClose={() => setLegal(null)} />
     </Screen>
   );
 }
@@ -90,6 +100,26 @@ function Row({
   );
 }
 
+function LinkRow({
+  icon,
+  label,
+  last,
+  onPress,
+}: {
+  icon: "shield-checkmark-outline" | "document-text-outline";
+  label: string;
+  last?: boolean;
+  onPress: () => void;
+}) {
+  return (
+    <Pressable onPress={onPress} style={[styles.row, !last && styles.border]}>
+      <IconWell name={icon} size={40} />
+      <Text style={styles.link}>{label}</Text>
+      <Icon color={colors.muted} name="chevron-forward" />
+    </Pressable>
+  );
+}
+
 const styles = StyleSheet.create({
   content: { paddingBottom: 36 },
   heroInner: { alignItems: "center" },
@@ -107,6 +137,7 @@ const styles = StyleSheet.create({
   border: { borderBottomWidth: 1, borderBottomColor: colors.line },
   label: { color: colors.muted, fontSize: 11, fontWeight: "800", textTransform: "uppercase", letterSpacing: 0.6 },
   value: { color: colors.ink, fontSize: 16, fontWeight: "700", marginTop: 3 },
+  link: { flex: 1, color: colors.ink, fontSize: 16, fontWeight: "700" },
   note: { flexDirection: "row", gap: 12, alignItems: "center" },
   noteText: { flex: 1, color: colors.muted, lineHeight: 20 },
 });
